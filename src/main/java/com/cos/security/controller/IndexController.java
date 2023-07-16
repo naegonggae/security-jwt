@@ -3,6 +3,8 @@ package com.cos.security.controller;
 import com.cos.security.model.User;
 import com.cos.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,12 +29,12 @@ public class IndexController {
 	}
 
 	@GetMapping("/admin")
-	public String admin() {
+	public @ResponseBody String admin() {
 		return "admin";
 	}
 
 	@GetMapping("/manager")
-	public String manager() {
+	public @ResponseBody String manager() {
 		return "manager";
 	}
 
@@ -63,5 +65,17 @@ public class IndexController {
 	@GetMapping("/joinProc")
 	public @ResponseBody String joinProc() {
 		return "회원가입이 완료되었습니다";
+	}
+
+	@Secured("ROLE_ADMIN") // 권한을 간단히 걸음
+	@GetMapping("/info")
+	public @ResponseBody String info() {
+		return "개인정보";
+	}
+
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')") // 여러개의 권한을 걸음
+	@GetMapping("/data")
+	public @ResponseBody String data() {
+		return "데이터 정보";
 	}
 }
