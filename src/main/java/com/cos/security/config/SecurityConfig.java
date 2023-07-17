@@ -32,8 +32,12 @@ public class SecurityConfig {
 				//.usernameParameter("username2") // PrincipalDetailService 에 username 을 다른걸로 하고 싶다면 이렇게 설정
 				.loginProcessingUrl("/login") // login 주소가 호출이 되면 시큐리티가 낚아채서 대신 로그인을 진행
 				// 위에 꺼 하면 controller 에 /login 안만들어도됨
-				.defaultSuccessUrl("/"); // /loginForm 으로 로그인 하면 메인 페이지로 이동하게 함
+				.defaultSuccessUrl("/") // /loginForm 으로 로그인 하면 메인 페이지로 이동하게 함
 				// 근데 컨트롤러로 다른 페이지 가게 설정해놓으면 설정한 곳으로 보내줄게 ex. user
+				.and()
+				.oauth2Login()
+				.loginPage("/loginForm"); // 이렇게 해주면 404 안뜸 // 구글로그인이 완료된 뒤에 후처리가 필요해야하는데 그냥 로그인됨...
+
 
 		return httpSecurity.build();
 	}
