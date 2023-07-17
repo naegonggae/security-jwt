@@ -72,13 +72,18 @@ public class IndexController {
 	// 그럼 컨트롤러에서 꺼낼때 마다 구분을 해서 사용을 해야하나? -> PrincipalDetails 가 두 타입을 상속받게 해서 Authentication 에 저장하면 해결
 	// 즉, PrincipalDetails 형태로 시큐리티 세션에 저장한다.
 
+	// 회원가입을 하고 UserDetails 로 오던 Oauth2User 로 오던 user 오브젝트가 필요함 -> 근데 두 타입은 user 오브젝트를 포함하고 있지 않음
+	// 그래서 PrincipalDetails 클래스를 만들고 두 타입을 상속받음 -> user 를 품어놔서 user 오브젝트 사용가능
+
 	@GetMapping({"", "/"})
 	public String index() {
 		return "index";
 	}
 
+	// Oauth 로그인을 해도 일반로그인을 해도 PrincipalDetails 로 받을 수 있음
 	@GetMapping("user")
-	public @ResponseBody String user() {
+	public @ResponseBody String user(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+		System.out.println("principalDetails = " + principalDetails.getUser());
 		return "user";
 	}
 

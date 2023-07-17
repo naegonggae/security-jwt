@@ -21,9 +21,17 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
 	// UserDetails, OAuth2User 두 가지 타입을 PrincipalDetails 타입으로 묶어서 시큐리티 세션에 저장, 각각 메서드들은 오버라이드해서 사용
 
 	private User user; // composition
+	private Map<String, Object> attributes;
 
+	// 일반 로그인 생성자
 	public PrincipalDetails(User user) {
 		this.user = user;
+	}
+
+	// Oauth 로그인 생성자
+	public PrincipalDetails(User user, Map<String, Object> attributes) { //attributes 를 토대로 user 객체를 만들어야함
+		this.user = user;
+		this.attributes = attributes;
 	}
 
 	// 해당 user 의 권한을 리턴하는 곳
@@ -74,13 +82,19 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
 	}
 
 	// Oauth 메서드
+	// - {sub=113676134780663010177,
+	// - name=이상훈, given_name=상훈, family_name=이,
+	// - picture=https://lh3.googleusercontent.com/a/AAcHTtfc9NCakKqJIH5R1j1obxOWqNZ25twNNE7lGe-HTchd=s96-c,
+	// - [email=tkdtkd975@gmail.com](mailto:email=tkdtkd975@gmail.com),
+	// - email_verified=true, locale=ko}
 	@Override
 	public String getName() {
-		return null;
+		String sub = (String) attributes.get("sub");
+		return sub; // 별로 안중요하고 쓰지도 않음
 	}
 
 	@Override
 	public Map<String, Object> getAttributes() {
-		return null;
+		return attributes;
 	}
 }

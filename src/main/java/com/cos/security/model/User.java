@@ -5,11 +5,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.sql.Timestamp;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class User {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,5 +28,15 @@ public class User {
 	@CreationTimestamp
 	private Timestamp createDate;
 
-
+	@Builder
+	public User(String username, String password, String email, String role, String provider,
+			String providerId, Timestamp createDate) {
+		this.username = username;
+		this.password = password;
+		this.email = email;
+		this.role = role;
+		this.provider = provider;
+		this.providerId = providerId;
+		this.createDate = createDate;
+	}
 }
