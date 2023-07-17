@@ -9,11 +9,16 @@ package com.cos.security.config.auth;
 import com.cos.security.model.User;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 // Security Session -> Authentication -> userDetails(PrincipalDetails)
-public class PrincipalDetails implements UserDetails {
+@Data
+public class PrincipalDetails implements UserDetails, OAuth2User {
+	// UserDetails, OAuth2User 두 가지 타입을 PrincipalDetails 타입으로 묶어서 시큐리티 세션에 저장, 각각 메서드들은 오버라이드해서 사용
 
 	private User user; // composition
 
@@ -22,6 +27,7 @@ public class PrincipalDetails implements UserDetails {
 	}
 
 	// 해당 user 의 권한을 리턴하는 곳
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Collection<GrantedAuthority> collect = new ArrayList<>(); // GrantedAuthority 타입으로 맞춰줘
@@ -33,13 +39,12 @@ public class PrincipalDetails implements UserDetails {
 		});
 		return collect;
 	}
-
 	// password 리턴
+
 	@Override
 	public String getPassword() {
 		return user.getPassword();
 	}
-
 	@Override
 	public String getUsername() {
 		return user.getUsername();
@@ -56,15 +61,26 @@ public class PrincipalDetails implements UserDetails {
 	}
 
 	// 비밀번호 유효기간 만료되었는지
+
 	@Override
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}
-
 	@Override
 	public boolean isEnabled() {
 		// 사이트에서 1년동안 로그인을 안하면 휴먼유저로 분류하기로 함 이런경우 사용됨
 		// 현재시간 - 마지막으로 로그인한 시간 > 1년 -> false
 		return true;
+	}
+
+	// Oauth 메서드
+	@Override
+	public String getName() {
+		return null;
+	}
+
+	@Override
+	public Map<String, Object> getAttributes() {
+		return null;
 	}
 }
