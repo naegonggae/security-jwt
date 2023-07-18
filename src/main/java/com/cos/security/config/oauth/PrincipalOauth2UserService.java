@@ -3,9 +3,11 @@ package com.cos.security.config.oauth;
 import com.cos.security.config.auth.PrincipalDetails;
 import com.cos.security.config.oauth.provider.FacebookUserInfo;
 import com.cos.security.config.oauth.provider.GoogleUserInfo;
+import com.cos.security.config.oauth.provider.NaverUserInfo;
 import com.cos.security.config.oauth.provider.OAuth2UserInfo;
 import com.cos.security.model.User;
 import com.cos.security.repository.UserRepository;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -49,8 +51,14 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 			System.out.println("페이스북 로그인 요청");
 			oAuth2UserInfo = new FacebookUserInfo(oAuth2User.getAttributes());
 
+		} else if (userRequest.getClientRegistration().getRegistrationId().equals("naver")) {
+			System.out.println("네이버 로그인 요청");
+			oAuth2UserInfo = new NaverUserInfo((Map)oAuth2User.getAttributes().get("response"));
+			//response={id=F05lyv5rv6V7NELmryhGU6ThL8nXjRxWIk4Cm3mBjDE, email=tkdtkd97@naver.com, name=이상훈}
+			// response 내부에 response 뽑아내려고
+
 		} else {
-			System.out.println("우리는 구글과 페이스북로그인만 지원해요");
+			System.out.println("우리는 구글과 페이스북, 네이버 로그인만 지원해요");
 		}
 		String provider = oAuth2UserInfo.getProvider(); // 일반로그인과 구별하는방법은 Provider 가 있는지 없는지 체크하면된다.
 		String providerId = oAuth2UserInfo.getProviderId();
